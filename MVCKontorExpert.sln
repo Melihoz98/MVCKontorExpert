@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34902.65
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCKontorExpert", "MVCKontorExpert.csproj", "{B98547A4-6EFE-4202-902E-D297708B7D96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B98547A4-6EFE-4202-902E-D297708B7D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B98547A4-6EFE-4202-902E-D297708B7D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B98547A4-6EFE-4202-902E-D297708B7D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B98547A4-6EFE-4202-902E-D297708B7D96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD00D0D4-E250-44BF-A05D-64F9B9929A1E}
+	EndGlobalSection
+EndGlobal
