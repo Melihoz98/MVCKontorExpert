@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace kontorExpert.Models
+namespace MVCKontorExpert.Models
 {
     public class Category
     {
