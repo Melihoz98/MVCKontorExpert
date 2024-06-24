@@ -1,4 +1,4 @@
-﻿using kontorExpert.Models;
+﻿using MVCKontorExpert.Models;
 using Microsoft.Data.SqlClient;
 
 namespace MVCKontorExpert.DataAccess

@@ -1,8 +1,9 @@
-﻿using MVCKontorExpert.Models;
+﻿using kontorExpert.Models;
+using MVCKontorExpert.Models;
 
-namespace MVCKontorExpert.DataAccess
+namespace MVCKontorExpert.BusinessLogic
 {
-    public interface ICategoryAccess
+    public interface ICategoryData
     {
         List<Category> GetAllCategories();
         Category GetCategoryById(int categoryId);

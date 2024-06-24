@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MVCKontorExpert.BusinessLogic;
 using MVCKontorExpert.Data;
+using MVCKontorExpert.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<ICategoryData, CategoryDataLogic>();
+builder.Services.AddScoped<ICategoryAccess, CategoryAccess>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
