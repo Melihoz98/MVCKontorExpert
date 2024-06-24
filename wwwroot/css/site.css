@@ -20,3 +20,40 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*FOR _InfoPartial*/
+
+.info-banner {
+    background-color: #007bff; /* Blue background */
+    color: #fff; /* White text */
+    padding: 10px 0; /* Adjust padding as needed */
+}
+
+    .info-banner p {
+        margin-bottom: 0; /* Remove bottom margin from paragraphs */
+    }
+
+    .info-banner strong {
+        color: #fff; /* White color for strong text */
+    }
+
+
+    /*FOR _FooterPartial*/
+.footer-custom {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+    .footer-custom a {
+        color: white;
+        text-decoration: underline;
+    }
+
+        .footer-custom a:hover {
+            color: lightgray;
+        }
