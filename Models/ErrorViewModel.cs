@@ -1,4 +1,4 @@
-namespace kontorExpert.Models
+namespace MVCKontorExpert.Models
 {
     public class ErrorViewModel
     {
