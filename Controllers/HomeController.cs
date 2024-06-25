@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using MVCKontorExpert.BusinessLogic;
 using MVCKontorExpert.Models;
 using System.Diagnostics;
-using System.Collections.Generic;
-using kontorExpert.Models;
 
 namespace MVCKontorExpert.Controllers
 {
@@ -18,9 +16,9 @@ namespace MVCKontorExpert.Controllers
             _categoryData = categoryData;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Category> categories = _categoryData.GetAllCategories();
+            var categories = await _categoryData.GetAllCategories();
             return View(categories);
         }
 

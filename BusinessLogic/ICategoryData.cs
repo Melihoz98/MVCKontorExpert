@@ -1,15 +1,14 @@
-﻿using kontorExpert.Models;
-using MVCKontorExpert.Models;
+﻿using MVCKontorExpert.Models;
 
 namespace MVCKontorExpert.BusinessLogic
 {
     public interface ICategoryData
     {
-        List<Category> GetAllCategories();
-        Category GetCategoryById(int categoryId);
-        Category GetCategoryByName(string categoryName);
-        int AddCategory(Category category);
-        void UpdateCategory(Category category);
-        void DeleteCategory(int categoryId);
+        Task<List<Category>> GetAllCategories();
+        Task<Category> GetCategoryById(int categoryId);
+        Task<Category> GetCategoryByName(string categoryName);
+        Task<int> AddCategory(Category category);
+        Task UpdateCategory(Category category);
+        Task DeleteCategory(int categoryId);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using kontorExpert.Models;
 using MVCKontorExpert.DataAccess;
 using MVCKontorExpert.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MVCKontorExpert.BusinessLogic
 {
@@ -13,36 +15,34 @@ namespace MVCKontorExpert.BusinessLogic
             _categoryAccess = categoryAccess;
         }
 
-        public List<Category> GetAllCategories()
+        public async Task<List<Category>> GetAllCategories()
         {
-            return _categoryAccess.GetAllCategories();
+            return await _categoryAccess.GetAllCategories();
         }
 
-        public Category GetCategoryById(int categoryId)
+        public async Task<Category> GetCategoryById(int categoryId)
         {
-            return _categoryAccess.GetCategoryById(categoryId);
+            return await _categoryAccess.GetCategoryById(categoryId);
         }
 
-        public Category GetCategoryByName(string categoryName)
+        public async Task<Category> GetCategoryByName(string categoryName)
         {
-            return _categoryAccess.GetCategoryByName(categoryName);
+            return await _categoryAccess.GetCategoryByName(categoryName);
         }
 
-        public int AddCategory(Category category)
+        public async Task<int> AddCategory(Category category)
         {
-            return _categoryAccess.AddCategory(category);
+            return await _categoryAccess.AddCategory(category);
         }
 
-        public void UpdateCategory(Category category)
+        public async Task UpdateCategory(Category category)
         {
-            _categoryAccess.UpdateCategory(category);
+            await _categoryAccess.UpdateCategory(category);
         }
 
-        public void DeleteCategory(int categoryId)
+        public async Task DeleteCategory(int categoryId)
         {
-            _categoryAccess.DeleteCategory(categoryId);
+            await _categoryAccess.DeleteCategory(categoryId);
         }
     }
 }
-
-

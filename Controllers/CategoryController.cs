@@ -2,6 +2,7 @@
 using MVCKontorExpert.BusinessLogic;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MVCKontorExpert.Models;
 
 namespace MVCKontorExpert.Controllers
@@ -15,15 +16,15 @@ namespace MVCKontorExpert.Controllers
             _categoryData = categoryData;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            List<Category> categories = _categoryData.GetAllCategories();
+            List<Category> categories = await _categoryData.GetAllCategories();
             return View(categories);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            Category category = _categoryData.GetCategoryById(id);
+            Category category = await _categoryData.GetCategoryById(id);
             if (category == null)
             {
                 return NotFound();
@@ -37,19 +38,19 @@ namespace MVCKontorExpert.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
-                _categoryData.AddCategory(category);
+                await _categoryData.AddCategory(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            Category category = _categoryData.GetCategoryById(id);
+            Category category = await _categoryData.GetCategoryById(id);
             if (category == null)
             {
                 return NotFound();
@@ -58,19 +59,19 @@ namespace MVCKontorExpert.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Category category)
+        public async Task<IActionResult> Edit(Category category)
         {
             if (ModelState.IsValid)
             {
-                _categoryData.UpdateCategory(category);
+                await _categoryData.UpdateCategory(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            Category category = _categoryData.GetCategoryById(id);
+            Category category = await _categoryData.GetCategoryById(id);
             if (category == null)
             {
                 return NotFound();
@@ -79,9 +80,9 @@ namespace MVCKontorExpert.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _categoryData.DeleteCategory(id);
+            await _categoryData.DeleteCategory(id);
             return RedirectToAction(nameof(Index));
         }
     }

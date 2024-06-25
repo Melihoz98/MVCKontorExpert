@@ -1,5 +1,11 @@
-﻿using MVCKontorExpert.Models;
+﻿using kontorExpert.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using MVCKontorExpert.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace MVCKontorExpert.DataAccess
 {
@@ -9,62 +15,60 @@ namespace MVCKontorExpert.DataAccess
 
         public CategoryAccess(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-            if (string.IsNullOrEmpty(_connectionString))
-            {
-                throw new InvalidOperationException("Database connection string is not configured.");
-            }
+            _connectionString = configuration.GetConnectionString("DefaultConnection")
+                                ?? throw new InvalidOperationException("Database connection string is not configured.");
         }
 
-        public List<Category> GetAllCategories()
+        public async Task<List<Category>> GetAllCategories()
         {
-            List<Category> categories = new List<Category>();
+            var categories = new List<Category>();
 
             try
             {
-                string queryString = "SELECT CategoryID, CategoryName FROM Categories";
+                const string queryString = "SELECT CategoryID, CategoryName FROM Categories";
 
-                using (SqlConnection con = new SqlConnection(_connectionString))
-                using (SqlCommand readCommand = new SqlCommand(queryString, con))
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
                 {
-                    con.Open();
+                    await con.OpenAsync();
 
-                    SqlDataReader categoryReader = readCommand.ExecuteReader();
-
-                    while (categoryReader.Read())
+                    using (var categoryReader = await readCommand.ExecuteReaderAsync())
                     {
-                        Category category = GetCategoryFromReader(categoryReader);
-                        categories.Add(category);
+                        while (await categoryReader.ReadAsync())
+                        {
+                            var category = GetCategoryFromReader(categoryReader);
+                            categories.Add(category);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Error retrieving categories: {ex.Message}");
                 throw;
             }
 
             return categories;
         }
-        public Category GetCategoryById(int categoryId)
+
+        public async Task<Category> GetCategoryById(int categoryId)
         {
             Category foundCategory = null;
 
             try
             {
-                string queryString = "SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = @CategoryId";
+                const string queryString = "SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = @CategoryId";
 
-                using (SqlConnection con = new SqlConnection(_connectionString))
-                using (SqlCommand readCommand = new SqlCommand(queryString, con))
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
                 {
                     readCommand.Parameters.AddWithValue("@CategoryId", categoryId);
 
-                    con.Open();
+                    await con.OpenAsync();
 
-                    using (SqlDataReader categoryReader = readCommand.ExecuteReader())
+                    using (var categoryReader = await readCommand.ExecuteReaderAsync())
                     {
-                        if (categoryReader.Read())
+                        if (await categoryReader.ReadAsync())
                         {
                             foundCategory = GetCategoryFromReader(categoryReader);
                         }
@@ -73,27 +77,28 @@ namespace MVCKontorExpert.DataAccess
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Error retrieving category: {ex.Message}");
                 throw;
             }
 
             return foundCategory;
         }
-        public Category GetCategoryByName(string categoryName)
+
+        public async Task<Category> GetCategoryByName(string categoryName)
         {
             Category category = null;
-            string queryString = "SELECT CategoryID, CategoryName FROM Categories WHERE CategoryName = @CategoryName";
+            const string queryString = "SELECT CategoryID, CategoryName FROM Categories WHERE CategoryName = @CategoryName";
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            using (SqlCommand command = new SqlCommand(queryString, con))
+            using (var con = new SqlConnection(_connectionString))
+            using (var command = new SqlCommand(queryString, con))
             {
                 command.Parameters.AddWithValue("@CategoryName", categoryName);
 
-                con.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
+                await con.OpenAsync();
+
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    if (reader.Read())
+                    if (await reader.ReadAsync())
                     {
                         category = new Category
                         {
@@ -106,77 +111,78 @@ namespace MVCKontorExpert.DataAccess
 
             return category;
         }
-        public int AddCategory(Category category)
+
+        public async Task<int> AddCategory(Category category)
         {
             int insertedId = -1;
 
             try
             {
-                string insertString = "INSERT INTO Categories (CategoryName) OUTPUT INSERTED.CategoryID VALUES (@CategoryName)";
+                const string insertString = "INSERT INTO Categories (CategoryName) OUTPUT INSERTED.CategoryID VALUES (@CategoryName)";
 
-                using (SqlConnection con = new SqlConnection(_connectionString))
-                using (SqlCommand createCommand = new SqlCommand(insertString, con))
+                using (var con = new SqlConnection(_connectionString))
+                using (var createCommand = new SqlCommand(insertString, con))
                 {
                     createCommand.Parameters.AddWithValue("@CategoryName", category.CategoryName);
 
-                    con.Open();
-                    insertedId = (int)createCommand.ExecuteScalar();
+                    await con.OpenAsync();
+                    insertedId = (int)await createCommand.ExecuteScalarAsync();
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Error adding category: {ex.Message}");
                 throw;
             }
 
             return insertedId;
         }
-        public void UpdateCategory(Category category)
+
+        public async Task UpdateCategory(Category category)
         {
             try
             {
-                string updateString = "UPDATE Categories SET CategoryName = @CategoryName WHERE CategoryID = @CategoryId";
+                const string updateString = "UPDATE Categories SET CategoryName = @CategoryName WHERE CategoryID = @CategoryId";
 
-                using (SqlConnection con = new SqlConnection(_connectionString))
-                using (SqlCommand updateCommand = new SqlCommand(updateString, con))
+                using (var con = new SqlConnection(_connectionString))
+                using (var updateCommand = new SqlCommand(updateString, con))
                 {
                     updateCommand.Parameters.AddWithValue("@CategoryName", category.CategoryName);
                     updateCommand.Parameters.AddWithValue("@CategoryId", category.CategoryID);
 
-                    con.Open();
-                    updateCommand.ExecuteNonQuery();
+                    await con.OpenAsync();
+                    await updateCommand.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Error updating category: {ex.Message}");
                 throw;
             }
         }
-        public void DeleteCategory(int categoryId)
+
+        public async Task DeleteCategory(int categoryId)
         {
             try
             {
-                string deleteString = "DELETE FROM Categories WHERE CategoryID = @CategoryId";
+                const string deleteString = "DELETE FROM Categories WHERE CategoryID = @CategoryId";
 
-                using (SqlConnection con = new SqlConnection(_connectionString))
-                using (SqlCommand deleteCommand = new SqlCommand(deleteString, con))
+                using (var con = new SqlConnection(_connectionString))
+                using (var deleteCommand = new SqlCommand(deleteString, con))
                 {
                     deleteCommand.Parameters.AddWithValue("@CategoryId", categoryId);
 
-                    con.Open();
-                    deleteCommand.ExecuteNonQuery();
+                    await con.OpenAsync();
+                    await deleteCommand.ExecuteNonQueryAsync();
                 }
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Error deleting category: {ex.Message}");
                 throw;
             }
         }
+
         private Category GetCategoryFromReader(SqlDataReader categoryReader)
         {
             int categoryId = categoryReader.GetInt32(categoryReader.GetOrdinal("CategoryID"));
