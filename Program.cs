@@ -16,6 +16,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddScoped<ICategoryData, CategoryDataLogic>();
 builder.Services.AddScoped<ICategoryAccess, CategoryAccess>();
+builder.Services.AddScoped<IProductData, ProductDataLogic>();
+builder.Services.AddScoped<IProductAccess, ProductAccess>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

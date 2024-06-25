@@ -10,7 +10,60 @@
     <ul>
         @foreach (var category in Model)
         {
-            <li>@category.CategoryName</li>
+            <li>
+                @category.CategoryName
+                <!-- Edit Button -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal-@category.CategoryID">
+                    Edit
+                </button>
+                <!-- Delete Button -->
+                <form asp-action="Delete" asp-controller="Category" asp-route-id="@category.CategoryID" method="post" style="display:inline">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editModal-@category.CategoryID" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-action="Edit" asp-controller="Category" method="post">
+                                    <input type="hidden" name="CategoryID" value="@category.CategoryID" />
+                                    <div class="form-group">
+                                        <label for="CategoryName">Category Name</label>
+                                        <input type="text" class="form-control" name="CategoryName" value="@category.CategoryName" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
         }
     </ul>
+
+    <h2>Add New Category</h2>
+    <form asp-action="Create" asp-controller="Category" method="post">
+        <div class="form-group">
+            <label for="CategoryName">Category Name</label>
+            <input type="text" class="form-control" name="CategoryName" />
+        </div>
+        <button type="submit" class="btn btn-primary">Add Category</button>
+    </form>
+
+    <!-- Link to Product Management -->
+    <div class="mt-4">
+        <a class="btn btn-info" asp-controller="Product" asp-action="Index">Product Management</a>
+    </div>
 </div>
+
+<!-- Add necessary scripts for Bootstrap modal -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
