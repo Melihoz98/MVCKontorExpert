@@ -8,7 +8,9 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form id="registerForm" method="post">
+            @Html.AntiForgeryToken()
+
             <h2>Opret konto nedenfor, eller log ind, hvis du har købt før</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -29,6 +31,18 @@
                 <input asp-for="Input.LastName" class="form-control" aria-required="true" />
                 <label asp-for="Input.LastName">Efternavn</label>
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.CompanyName" class="form-control" />
+                <label asp-for="Input.CompanyName">Firmanavn</label>
+                <span asp-validation-for="Input.CompanyName" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.CVR" class="form-control" />
+                <label asp-for="Input.CVR">CVR</label>
+                <span asp-validation-for="Input.CVR" class="text-danger"></span>
             </div>
 
             <div class="form-floating mb-3">
@@ -94,7 +108,7 @@
                 }
                 else
                 {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="/" method="post" class="form-horizontal">
                         <div>
                             <p>
                                 @foreach (var provider in Model.ExternalLogins)
@@ -112,4 +126,25 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#registerForm").on("submit", function (event) {
+                event.preventDefault(); // Prevent the form from submitting the default way
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Page("/Account/Register", new { area = "Identity" })',
+                    data: formData,
+                    success: function (response) {
+                        window.location.href = '/';
+                    },
+                    error: function (response) {
+                        // Handle error
+                        alert('Registration failed. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
 }
