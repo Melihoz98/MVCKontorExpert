@@ -1,5 +1,4 @@
-﻿using kontorExpert.Models;
-using MVCKontorExpert.DataAccess;
+﻿using MVCKontorExpert.DataAccess;
 using MVCKontorExpert.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;

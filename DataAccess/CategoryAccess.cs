@@ -1,5 +1,4 @@
-﻿using kontorExpert.Models;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using MVCKontorExpert.Models;
 using System;
