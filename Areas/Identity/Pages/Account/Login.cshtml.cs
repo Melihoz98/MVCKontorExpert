@@ -75,10 +75,26 @@ namespace MVCKontorExpert.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
+                var user = await _signInManager.UserManager.FindByEmailAsync(Input.Email);
+                if (user == null)
+                {
+                    _logger.LogWarning($"User with email '{Input.Email}' not found.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    return Page();
+                }
+
+                // Check if the email is confirmed, or bypass if not required to confirm
+                if (!await _signInManager.UserManager.IsEmailConfirmedAsync(user) && _signInManager.Options.SignIn.RequireConfirmedAccount)
+                {
+                    _logger.LogWarning($"Email '{Input.Email}' is not confirmed for user '{user.UserName}'.");
+                    ModelState.AddModelError(string.Empty, "You must confirm your email before logging in.");
+                    return Page();
+                }
+
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation($"User '{user.UserName}' logged in.");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -87,11 +103,12 @@ namespace MVCKontorExpert.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning($"User account '{user.UserName}' is locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
+                    _logger.LogWarning($"Invalid login attempt for user '{user.UserName}'.");
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
@@ -100,5 +117,7 @@ namespace MVCKontorExpert.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
+
     }
 }

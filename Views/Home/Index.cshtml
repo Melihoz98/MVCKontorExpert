@@ -4,15 +4,18 @@
 </div>
 
 <div class="container">
-    <!-- Link to Product Management -->
-    <div class="mt-4">
-        <a class="btn btn-info" asp-controller="Product" asp-action="Index">Product Management</a>
-    </div>
+    @if (User.IsInRole("Admin"))
+    {
+        <!-- Link to Product Management -->
+        <div class="mt-4">
+            <a class="btn btn-info" asp-controller="Product" asp-action="Index">Product Management</a>
+        </div>
 
-    <!-- Link to Category Management -->
-    <div class="mt-4">
-        <a class="btn btn-info" asp-controller="Category" asp-action="CategoryManagement">Category Management</a>
-    </div>
+        <!-- Link to Category Management -->
+        <div class="mt-4">
+            <a class="btn btn-info" asp-controller="Category" asp-action="CategoryManagement">Category Management</a>
+        </div>
+    }
 </div>
 
 <!-- Add necessary scripts for Bootstrap modal -->
