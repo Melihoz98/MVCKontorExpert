@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using MVCKontorExpert.BusinessLogic;
 using MVCKontorExpert.Models;
 using System.Diagnostics;
 
@@ -7,15 +8,18 @@ namespace MVCKontorExpert.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ICategoryData _categoryData;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ICategoryData categoryData)
         {
             _logger = logger;
+            _categoryData = categoryData;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var categories = await _categoryData.GetAllCategories();
+            return View(categories);
         }
 
         public IActionResult Privacy()

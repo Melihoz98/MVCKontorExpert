@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MVCKontorExpert.BusinessLogic;
 using MVCKontorExpert.Data;
+using MVCKontorExpert.DataAccess;
 using MVCKontorExpert.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +21,10 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.SignIn.RequireConfirmedAccount = true;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddScoped<ICategoryData, CategoryDataLogic>();
+builder.Services.AddScoped<ICategoryAccess, CategoryAccess>();
+builder.Services.AddScoped<IProductData, ProductDataLogic>();
+builder.Services.AddScoped<IProductAccess, ProductAccess>();
 
 builder.Services.AddControllersWithViews();
 

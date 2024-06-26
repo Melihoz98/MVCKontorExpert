@@ -1,8 +1,21 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
+﻿<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<div class="container">
+    <!-- Link to Product Management -->
+    <div class="mt-4">
+        <a class="btn btn-info" asp-controller="Product" asp-action="Index">Product Management</a>
+    </div>
+
+    <!-- Link to Category Management -->
+    <div class="mt-4">
+        <a class="btn btn-info" asp-controller="Category" asp-action="CategoryManagement">Category Management</a>
+    </div>
+</div>
+
+<!-- Add necessary scripts for Bootstrap modal -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
