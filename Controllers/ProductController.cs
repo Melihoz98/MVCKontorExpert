@@ -39,7 +39,7 @@ namespace MVCKontorExpert.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 // Add product logic
                 await _productData.AddProduct(product);
@@ -74,7 +74,7 @@ namespace MVCKontorExpert.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Product product)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 await _productData.UpdateProduct(product);
                 return RedirectToAction(nameof(Index));

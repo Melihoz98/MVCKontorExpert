@@ -1,65 +1,17 @@
-﻿@model List<MVCKontorExpert.Models.Category>
-
-<div class="text-center">
+﻿<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
 <div class="container">
-    <h2>Categories</h2>
-    <ul>
-        @foreach (var category in Model)
-        {
-            <li>
-                @category.CategoryName
-                <!-- Edit Button -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal-@category.CategoryID">
-                    Edit
-                </button>
-                <!-- Delete Button -->
-                <form asp-action="Delete" asp-controller="Category" asp-route-id="@category.CategoryID" method="post" style="display:inline">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-
-                <!-- Edit Modal -->
-                <div class="modal fade" id="editModal-@category.CategoryID" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form asp-action="Edit" asp-controller="Category" method="post">
-                                    <input type="hidden" name="CategoryID" value="@category.CategoryID" />
-                                    <div class="form-group">
-                                        <label for="CategoryName">Category Name</label>
-                                        <input type="text" class="form-control" name="CategoryName" value="@category.CategoryName" />
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        }
-    </ul>
-
-    <h2>Add New Category</h2>
-    <form asp-action="Create" asp-controller="Category" method="post">
-        <div class="form-group">
-            <label for="CategoryName">Category Name</label>
-            <input type="text" class="form-control" name="CategoryName" />
-        </div>
-        <button type="submit" class="btn btn-primary">Add Category</button>
-    </form>
-
     <!-- Link to Product Management -->
     <div class="mt-4">
         <a class="btn btn-info" asp-controller="Product" asp-action="Index">Product Management</a>
+    </div>
+
+    <!-- Link to Category Management -->
+    <div class="mt-4">
+        <a class="btn btn-info" asp-controller="Category" asp-action="CategoryManagement">Category Management</a>
     </div>
 </div>
 
