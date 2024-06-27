@@ -1,33 +1,4 @@
-﻿@model List<MVCKontorExpert.Models.Product>
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
-<div class="container">
-    <div class="row mt-4">
-        @if (Model != null)
-        {
-            @foreach (var product in Model)
-            {
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        @if (product.Images != null && product.Images.Any())
-                        {
-                            <img src="@product.Images.First().ImageUrl" class="card-img-top" alt="@product.Name">
-                        }
-                        <div class="card-body">
-                            <h5 class="card-title">@product.Name</h5>
-                            <p class="card-text">Price: @product.Price</p>
-                        </div>
-                    </div>
-                </div>
-            }
-        }
-    </div>
-</div>
-
+﻿
 <!-- Add necessary scripts for Bootstrap modal -->
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>

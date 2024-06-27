@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MVCKontorExpert.Controllers
 {
-    public class ProductController : Controller
+    public class ProductManagementController : Controller
     {
         private readonly IProductData _productData;
 
-        public ProductController(IProductData productData)
+        public ProductManagementController(IProductData productData)
         {
             _productData = productData;
         }
@@ -18,7 +18,7 @@ namespace MVCKontorExpert.Controllers
         public async Task<IActionResult> Index()
         {
             List<Product> products = await _productData.GetAllProducts();
-            return View("ProductManagement", products);
+            return View("~/Views/Management/ProductManagement/Index.cshtml", products);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -28,12 +28,12 @@ namespace MVCKontorExpert.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            return View("~/Views/Management/ProductManagement/Details.cshtml", product);
         }
 
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/Management/ProductManagement/Create.cshtml");
         }
 
         [HttpPost]
@@ -57,9 +57,8 @@ namespace MVCKontorExpert.Controllers
             }
 
             // Return the view with the invalid product model
-            return View(product);
+            return View("~/Views/Management/ProductManagement/Create.cshtml", product);
         }
-
 
         public async Task<IActionResult> Edit(int id)
         {
@@ -68,7 +67,7 @@ namespace MVCKontorExpert.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            return View("~/Views/Management/ProductManagement/Edit.cshtml", product);
         }
 
         [HttpPost]
@@ -79,7 +78,7 @@ namespace MVCKontorExpert.Controllers
                 await _productData.UpdateProduct(product);
                 return RedirectToAction(nameof(Index));
             }
-            return View(product);
+            return View("~/Views/Management/ProductManagement/Edit.cshtml", product);
         }
 
         public async Task<IActionResult> Delete(int id)
@@ -89,7 +88,7 @@ namespace MVCKontorExpert.Controllers
             {
                 return NotFound();
             }
-            return View(product);
+            return View("~/Views/Management/ProductManagement/Delete.cshtml", product);
         }
 
         [HttpPost, ActionName("Delete")]

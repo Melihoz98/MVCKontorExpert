@@ -1,0 +1,26 @@
+﻿ <!-- Administration Dropdown Menu -->
+@if (User.IsInRole("Admin"))
+{
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle text-dark" href="#" id="administrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Administration
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="administrationDropdown">
+            <li>
+                <a class="dropdown-item" asp-controller="ProductManagement" asp-action="Index">Product Management</a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="CategoryManagement" asp-action="Index">Category Management</a>
+            </li>
+            <li>
+                <a class="dropdown-item" asp-controller="ParentCategoryManagement" asp-action="Index">Parent Category Management</a>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark">Not an admin</a>
+    </li>
+}

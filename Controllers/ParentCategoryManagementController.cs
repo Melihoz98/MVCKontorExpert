@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MVCKontorExpert.Controllers
 {
-    public class ParentCategoryController : Controller
+    public class ParentCategoryManagementController : Controller
     {
         private readonly IParentCategoryData _parentCategoryData;
 
-        public ParentCategoryController(IParentCategoryData parentCategoryData)
+        public ParentCategoryManagementController(IParentCategoryData parentCategoryData)
         {
             _parentCategoryData = parentCategoryData;
         }

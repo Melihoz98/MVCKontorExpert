@@ -28,7 +28,7 @@
                             Edit
                         </button>
                         <!-- Delete Button -->
-                        <form asp-action="Delete" asp-controller="ParentCategory" asp-route-id="@parentCategory.ParentCategoryID" method="post" style="display:inline">
+                        <form asp-action="Delete" asp-controller="ParentCategoryManagement" asp-route-id="@parentCategory.ParentCategoryID" method="post" style="display:inline">
                             <button type="submit" class="btn btn-danger">Delete</button>
                         </form>
 
@@ -43,7 +43,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form asp-action="Edit" asp-controller="ParentCategory" method="post">
+                                        <form asp-action="Edit" asp-controller="ParentCategoryManagement" method="post">
                                             <input type="hidden" name="ParentCategoryID" value="@parentCategory.ParentCategoryID" />
                                             <div class="form-group">
                                                 <label for="ParentCategoryName">Parent Category Name</label>
@@ -62,7 +62,7 @@
     </table>
 
     <h2>Add New Parent Category</h2>
-    <form asp-action="Create" asp-controller="ParentCategory" method="post">
+    <form asp-action="Create" asp-controller="ParentCategoryManagement" method="post">
         <div class="form-group">
             <label for="ParentCategoryName">Parent Category Name</label>
             <input type="text" class="form-control" name="ParentCategoryName" />

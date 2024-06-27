@@ -6,21 +6,21 @@ using MVCKontorExpert.Models;
 
 namespace MVCKontorExpert.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryManagementController : Controller
     {
         private readonly ICategoryData _categoryData;
         private readonly IParentCategoryData _parentCategoryData;
 
-        public CategoryController(ICategoryData categoryData, IParentCategoryData parentCategoryData)
+        public CategoryManagementController(ICategoryData categoryData, IParentCategoryData parentCategoryData)
         {
             _categoryData = categoryData;
             _parentCategoryData = parentCategoryData;
         }
 
-        public async Task<IActionResult> CategoryManagement()
+        public async Task<IActionResult> Index()
         {
             List<Category> categories = await _categoryData.GetAllCategories();
-            return View(categories);
+            return View("/Views/Management/CategoryManagement/Index.cshtml", categories);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -33,18 +33,13 @@ namespace MVCKontorExpert.Controllers
             return View(category);
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
                 await _categoryData.AddCategory(category);
-                return RedirectToAction(nameof(CategoryManagement));
+                return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
@@ -65,7 +60,7 @@ namespace MVCKontorExpert.Controllers
             if (ModelState.IsValid)
             {
                 await _categoryData.UpdateCategory(category);
-                return RedirectToAction(nameof(CategoryManagement));
+                return RedirectToAction(nameof(Index));
             }
             return View(category);
         }
@@ -84,7 +79,7 @@ namespace MVCKontorExpert.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _categoryData.DeleteCategory(id);
-            return RedirectToAction(nameof(CategoryManagement));
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> GetSubCategories(int parentId)
@@ -92,6 +87,5 @@ namespace MVCKontorExpert.Controllers
             var subCategories = await _categoryData.GetCategoriesByParentCategoryId(parentId);
             return Json(subCategories);
         }
-
     }
 }
