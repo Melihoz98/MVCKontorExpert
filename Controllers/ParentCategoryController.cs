@@ -1,5 +1,5 @@
-﻿using MVCKontorExpert.BusinessLogic;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using MVCKontorExpert.BusinessLogic;
 using MVCKontorExpert.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -26,7 +26,7 @@ namespace MVCKontorExpert.Controllers
         public async Task<IActionResult> ParentCategoryManagement()
         {
             List<ParentCategory> parentCategories = await _parentCategoryData.GetAllParentCategories();
-            return View(parentCategories);
+            return View("~/Views/Category/ParentCategoryManagement.cshtml", parentCategories);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -92,5 +92,13 @@ namespace MVCKontorExpert.Controllers
             await _parentCategoryData.DeleteParentCategory(id);
             return RedirectToAction(nameof(ParentCategoryManagement));
         }
+
+        // Action method to manage Parent Categories in the administration section
+        public async Task<IActionResult> ParentCategoryAdministration()
+        {
+            List<ParentCategory> parentCategories = await _parentCategoryData.GetAllParentCategories();
+            return View("Category/ParentCategoryManagement", parentCategories);
+        }
+
     }
 }

@@ -13,6 +13,7 @@
             <tr>
                 <th>Category ID</th>
                 <th>Category Name</th>
+                <th>Parent Category ID</th>
                 <th></th>
             </tr>
         </thead>
@@ -22,6 +23,8 @@
                 <tr>
                     <td>@category.CategoryID</td>
                     <td>@category.CategoryName</td>
+                    <td>@category.ParentCategoryID</td>
+
                     <td>
                         <!-- Edit Button -->
                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal-@category.CategoryID">
@@ -49,6 +52,10 @@
                                                 <label for="CategoryName">Category Name</label>
                                                 <input type="text" class="form-control" name="CategoryName" value="@category.CategoryName" />
                                             </div>
+                                            <div class="form-group">
+                                                <label for="ParentCategoryID">Parent Category ID</label>
+                                                <input type="text" class="form-control" name="ParentCategoryID" value="@category.ParentCategoryID" />
+                                            </div>
                                             <button type="submit" class="btn btn-primary">Save changes</button>
                                         </form>
                                     </div>
@@ -66,6 +73,10 @@
         <div class="form-group">
             <label for="CategoryName">Category Name</label>
             <input type="text" class="form-control" name="CategoryName" />
+        </div>
+        <div class="form-group">
+            <label for="ParentCategoryID">Parent Category ID</label>
+            <input type="text" class="form-control" name="ParentCategoryID" />
         </div>
         <button type="submit" class="btn btn-primary">Add Category</button>
     </form>
