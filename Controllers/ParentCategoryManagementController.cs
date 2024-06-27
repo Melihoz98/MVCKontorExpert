@@ -18,15 +18,7 @@ namespace MVCKontorExpert.Controllers
         public async Task<IActionResult> Index()
         {
             List<ParentCategory> parentCategories = await _parentCategoryData.GetAllParentCategories();
-            ViewBag.ParentCategories = parentCategories;
-
-            return View();
-        }
-
-        public async Task<IActionResult> ParentCategoryManagement()
-        {
-            List<ParentCategory> parentCategories = await _parentCategoryData.GetAllParentCategories();
-            return View("~/Views/Category/ParentCategoryManagement.cshtml", parentCategories);
+            return View("~/Views/Management/ParentCategoryManagement/Index.cshtml", parentCategories);
         }
 
         public async Task<IActionResult> Details(int id)
@@ -50,7 +42,7 @@ namespace MVCKontorExpert.Controllers
             if (ModelState.IsValid)
             {
                 await _parentCategoryData.AddParentCategory(parentCategory);
-                return RedirectToAction(nameof(ParentCategoryManagement));
+                return RedirectToAction(nameof(Index));
             }
             return View(parentCategory);
         }
@@ -71,7 +63,7 @@ namespace MVCKontorExpert.Controllers
             if (ModelState.IsValid)
             {
                 await _parentCategoryData.UpdateParentCategory(parentCategory);
-                return RedirectToAction(nameof(ParentCategoryManagement));
+                return RedirectToAction(nameof(Index));
             }
             return View(parentCategory);
         }
@@ -90,15 +82,7 @@ namespace MVCKontorExpert.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _parentCategoryData.DeleteParentCategory(id);
-            return RedirectToAction(nameof(ParentCategoryManagement));
+            return RedirectToAction(nameof(Index));
         }
-
-        // Action method to manage Parent Categories in the administration section
-        public async Task<IActionResult> ParentCategoryAdministration()
-        {
-            List<ParentCategory> parentCategories = await _parentCategoryData.GetAllParentCategories();
-            return View("Category/ParentCategoryManagement", parentCategories);
-        }
-
     }
 }
