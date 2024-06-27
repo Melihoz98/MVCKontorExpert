@@ -27,11 +27,17 @@ namespace MVCKontorExpert.Controllers
             var parentCategories = await _parentCategoryData.GetAllParentCategories();
             var usedProducts = await _productData.GetUsedProducts();
             var newProducts = await _productData.GetNewProducts(); 
+            var hjemmekontor = await _categoryData.GetCategoriesByParentCategoryId(8);
+            var akustik = await _categoryData.GetCategoriesByParentCategoryId(6);
+            var diverse = await _categoryData.GetCategoriesByParentCategoryId(7);
 
             ViewBag.Categories = categories;
             ViewBag.ParentCategories = parentCategories;
             ViewBag.UsedProducts = usedProducts;
             ViewBag.NewProducts = newProducts;
+            ViewBag.Hjemmekontor = hjemmekontor;
+            ViewBag.Akustik = akustik;
+            ViewBag.Diverse = diverse;
 
             return View();
         }

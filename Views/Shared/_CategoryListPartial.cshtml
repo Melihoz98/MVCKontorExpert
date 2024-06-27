@@ -1,7 +1,9 @@
 ﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
     <div class="container-fluid">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- Dropdown for Used Products -->
+
+
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="usedProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Used Products
@@ -13,7 +15,10 @@
                     }
                 </ul>
             </li>
-            <!-- Dropdown for New Products -->
+
+
+
+
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="newProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     New Products
@@ -25,19 +30,46 @@
                     }
                 </ul>
             </li>
-            <!-- Navigation for Parent Categories -->
-            @foreach (var parentCategory in ViewBag.ParentCategories ?? new List<ParentCategory>())
-            {
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="parentCategoryDropdown-@parentCategory.ParentCategoryID"
-                       role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="loadSubCategories(@parentCategory.ParentCategoryID)">
-                        @parentCategory.ParentCategoryName
-                    </a>
-                    <ul id="subCategoryDropdown-@parentCategory.ParentCategoryID" class="dropdown-menu" aria-labelledby="parentCategoryDropdown-@parentCategory.ParentCategoryID">
-                        <!-- Placeholder for subcategories loaded via AJAX -->
-                    </ul>
-                </li>
-            }
+
+
+
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="HjemmekontorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                   Hjemmekontor
+                </a>
+                <ul id="HjemmekontorDropdownList" class="dropdown-menu" aria-labelledby="HjemmekontorDropdown">
+                    @foreach (var hjemmeKontor in ViewBag.Hjemmekontor ?? new List<Category>())
+                    {
+                        <li><a class="dropdown-item" href="#">@hjemmeKontor.CategoryName</a></li>
+                    }
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="AkustikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Akustik
+                </a>
+                <ul id="AkustikDropdownList" class="dropdown-menu" aria-labelledby="AkustikDropdown">
+                    @foreach (var akustik in ViewBag.Akustik ?? new List<Category>())
+                    {
+                        <li><a class="dropdown-item" href="#">@akustik.CategoryName</a></li>
+                    }
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="DiverseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Diverse
+                </a>
+                <ul id="DiverseDropdownList" class="dropdown-menu" aria-labelledby="DiverseDropdown">
+                    @foreach (var diverse in ViewBag.Diverse ?? new List<Category>())
+                    {
+                        <li><a class="dropdown-item" href="#">@diverse.CategoryName</a></li>
+                    }
+                </ul>
+            </li>
+
         </ul>
     </div>
 </nav>
