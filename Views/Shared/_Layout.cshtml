@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -55,12 +59,30 @@
                             </a>
                         </li>
                     </ul>
-                    <!-- Include _LoginPartial for additional login/logout links if needed -->
                     @if (User.Identity.IsAuthenticated)
                     {
                         <partial name="_LoginPartial" />
                     }
                 </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Navigation for Parent Categories -->
+                    @foreach (var parentCategory in ViewBag.ParentCategories ?? new List<ParentCategory>())
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="parentCategoryDropdown-@parentCategory.ParentCategoryID"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="loadSubCategories(@parentCategory.ParentCategoryID)">
+                                @parentCategory.ParentCategoryName
+                            </a>
+                            <ul id="subCategoryDropdown-@parentCategory.ParentCategoryID" class="dropdown-menu" aria-labelledby="parentCategoryDropdown-@parentCategory.ParentCategoryID">
+                                <!-- Placeholder for subcategories loaded via AJAX -->
+                            </ul>
+                        </li>
+                    }
+                </ul>
             </div>
         </nav>
     </header>
@@ -76,5 +98,29 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // JavaScript function to handle AJAX call and display subcategories
+        function loadSubCategories(parentCategoryId) {
+            $.ajax({
+                url: '@Url.Action("GetSubCategories", "Category")',
+                type: 'GET',
+                data: { parentId: parentCategoryId },
+                success: function (data) {
+                    var dropdown = $('#subCategoryDropdown-' + parentCategoryId);
+                    dropdown.empty();
+
+                    $.each(data, function (index, subCategory) {
+                        dropdown.append('<li><a class="dropdown-item" href="#">' + subCategory.categoryName + '</a></li>');
+                    });
+
+                    dropdown.parent().addClass('show');
+                },
+                error: function () {
+                    console.log('Failed to load subcategories.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -24,7 +24,7 @@ namespace MVCKontorExpert.DataAccess
 
             try
             {
-                const string queryString = "SELECT CategoryID, CategoryName FROM Categories";
+                const string queryString = "SELECT CategoryID, CategoryName, ParentCategoryID FROM Categories";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var readCommand = new SqlCommand(queryString, con))
@@ -56,7 +56,7 @@ namespace MVCKontorExpert.DataAccess
 
             try
             {
-                const string queryString = "SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = @CategoryId";
+                const string queryString = "SELECT CategoryID, CategoryName, ParentCategoryID FROM Categories WHERE CategoryID = @CategoryId";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var readCommand = new SqlCommand(queryString, con))
@@ -86,7 +86,7 @@ namespace MVCKontorExpert.DataAccess
         public async Task<Category> GetCategoryByName(string categoryName)
         {
             Category category = null;
-            const string queryString = "SELECT CategoryID, CategoryName FROM Categories WHERE CategoryName = @CategoryName";
+            const string queryString = "SELECT CategoryID, CategoryName, ParentCategoryID FROM Categories WHERE CategoryName = @CategoryName";
 
             using (var con = new SqlConnection(_connectionString))
             using (var command = new SqlCommand(queryString, con))
@@ -99,16 +99,46 @@ namespace MVCKontorExpert.DataAccess
                 {
                     if (await reader.ReadAsync())
                     {
-                        category = new Category
-                        {
-                            CategoryID = reader.GetInt32(reader.GetOrdinal("CategoryID")),
-                            CategoryName = reader.GetString(reader.GetOrdinal("CategoryName"))
-                        };
+                        category = GetCategoryFromReader(reader);
                     }
                 }
             }
 
             return category;
+        }
+
+        public async Task<List<Category>> GetCategoriesByParentCategoryId(int parentCategoryId)
+        {
+            var categories = new List<Category>();
+
+            try
+            {
+                const string queryString = "SELECT CategoryID, CategoryName, ParentCategoryID FROM Categories WHERE ParentCategoryID = @ParentCategoryId";
+
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
+                {
+                    readCommand.Parameters.AddWithValue("@ParentCategoryId", parentCategoryId);
+
+                    await con.OpenAsync();
+
+                    using (var categoryReader = await readCommand.ExecuteReaderAsync())
+                    {
+                        while (await categoryReader.ReadAsync())
+                        {
+                            var category = GetCategoryFromReader(categoryReader);
+                            categories.Add(category);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving categories for parent category: {ex.Message}");
+                throw;
+            }
+
+            return categories;
         }
 
         public async Task<int> AddCategory(Category category)
@@ -117,12 +147,13 @@ namespace MVCKontorExpert.DataAccess
 
             try
             {
-                const string insertString = "INSERT INTO Categories (CategoryName) OUTPUT INSERTED.CategoryID VALUES (@CategoryName)";
+                const string insertString = "INSERT INTO Categories (CategoryName, ParentCategoryID) OUTPUT INSERTED.CategoryID VALUES (@CategoryName, @ParentCategoryID)";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var createCommand = new SqlCommand(insertString, con))
                 {
                     createCommand.Parameters.AddWithValue("@CategoryName", category.CategoryName);
+                    createCommand.Parameters.AddWithValue("@ParentCategoryID", (object)category.ParentCategoryID ?? DBNull.Value);
 
                     await con.OpenAsync();
                     insertedId = (int)await createCommand.ExecuteScalarAsync();
@@ -141,13 +172,14 @@ namespace MVCKontorExpert.DataAccess
         {
             try
             {
-                const string updateString = "UPDATE Categories SET CategoryName = @CategoryName WHERE CategoryID = @CategoryId";
+                const string updateString = "UPDATE Categories SET CategoryName = @CategoryName, ParentCategoryID = @ParentCategoryID WHERE CategoryID = @CategoryId";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var updateCommand = new SqlCommand(updateString, con))
                 {
                     updateCommand.Parameters.AddWithValue("@CategoryName", category.CategoryName);
                     updateCommand.Parameters.AddWithValue("@CategoryId", category.CategoryID);
+                    updateCommand.Parameters.AddWithValue("@ParentCategoryID", (object)category.ParentCategoryID ?? DBNull.Value);
 
                     await con.OpenAsync();
                     await updateCommand.ExecuteNonQueryAsync();
@@ -186,8 +218,9 @@ namespace MVCKontorExpert.DataAccess
         {
             int categoryId = categoryReader.GetInt32(categoryReader.GetOrdinal("CategoryID"));
             string categoryName = categoryReader.GetString(categoryReader.GetOrdinal("CategoryName"));
+            int? parentCategoryId = categoryReader.IsDBNull(categoryReader.GetOrdinal("ParentCategoryID")) ? (int?)null : categoryReader.GetInt32(categoryReader.GetOrdinal("ParentCategoryID"));
 
-            return new Category(categoryId, categoryName);
+            return new Category(categoryId, categoryName, parentCategoryId);
         }
     }
 }
