@@ -69,6 +69,30 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Dropdown for Used Products -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="usedProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Used Products
+                        </a>
+                        <ul id="usedProductsDropdownList" class="dropdown-menu" aria-labelledby="usedProductsDropdown">
+                            @foreach (var usedProduct in ViewBag.UsedProducts ?? new List<Product>())
+                            {
+                                <li><a class="dropdown-item" href="#">@usedProduct.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <!-- Dropdown for New Products -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="newProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            New Products
+                        </a>
+                        <ul id="newProductsDropdownList" class="dropdown-menu" aria-labelledby="newProductsDropdown">
+                            @foreach (var newProduct in ViewBag.NewProducts ?? new List<Product>())
+                            {
+                                <li><a class="dropdown-item" href="#">@newProduct.Name</a></li>
+                            }
+                        </ul>
+                    </li>
                     <!-- Navigation for Parent Categories -->
                     @foreach (var parentCategory in ViewBag.ParentCategories ?? new List<ParentCategory>())
                     {
