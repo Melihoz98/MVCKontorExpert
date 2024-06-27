@@ -1,0 +1,79 @@
+﻿@model List<MVCKontorExpert.Models.ParentCategory>
+
+<div class="text-center">
+    <h1 class="display-4">Parent Category Management</h1>
+</div>
+
+<div class="container">
+    <h2>Parent Categories</h2>
+
+    <!-- Table to display parent categories -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Parent Category ID</th>
+                <th>Parent Category Name</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var parentCategory in Model)
+            {
+                <tr>
+                    <td>@parentCategory.ParentCategoryID</td>
+                    <td>@parentCategory.ParentCategoryName</td>
+                    <td>
+                        <!-- Edit Button -->
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#editModal-@parentCategory.ParentCategoryID">
+                            Edit
+                        </button>
+                        <!-- Delete Button -->
+                        <form asp-action="Delete" asp-controller="ParentCategory" asp-route-id="@parentCategory.ParentCategoryID" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="editModal-@parentCategory.ParentCategoryID" tabindex="-1" role="dialog" aria-labelledby="editModalLabel-@parentCategory.ParentCategoryID" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editModalLabel-@parentCategory.ParentCategoryID">Edit Parent Category</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form asp-action="Edit" asp-controller="ParentCategory" method="post">
+                                            <input type="hidden" name="ParentCategoryID" value="@parentCategory.ParentCategoryID" />
+                                            <div class="form-group">
+                                                <label for="ParentCategoryName">Parent Category Name</label>
+                                                <input type="text" class="form-control" name="ParentCategoryName" value="@parentCategory.ParentCategoryName" />
+                                            </div>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Add New Parent Category</h2>
+    <form asp-action="Create" asp-controller="ParentCategory" method="post">
+        <div class="form-group">
+            <label for="ParentCategoryName">Parent Category Name</label>
+            <input type="text" class="form-control" name="ParentCategoryName" />
+        </div>
+        <button type="submit" class="btn btn-primary">Add Parent Category</button>
+    </form>
+</div>
+
+<!-- Add necessary scripts for Bootstrap modal -->
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+}

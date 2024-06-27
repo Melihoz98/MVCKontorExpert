@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -29,6 +33,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <!-- Administration Dropdown Menu -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="administrationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Administration
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="administrationDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Product" asp-action="Index">Product Management</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="Category" asp-action="CategoryManagement">Category Management</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-controller="ParentCategory" asp-action="ParentCategoryManagement">Parent Category Management</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                     <form class="d-flex mx-auto" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -55,12 +76,54 @@
                             </a>
                         </li>
                     </ul>
-                    <!-- Include _LoginPartial for additional login/logout links if needed -->
                     @if (User.Identity.IsAuthenticated)
                     {
                         <partial name="_LoginPartial" />
                     }
                 </div>
+            </div>
+        </nav>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <!-- Dropdown for Used Products -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="usedProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Used Products
+                        </a>
+                        <ul id="usedProductsDropdownList" class="dropdown-menu" aria-labelledby="usedProductsDropdown">
+                            @foreach (var usedProduct in ViewBag.UsedProducts ?? new List<Product>())
+                            {
+                                <li><a class="dropdown-item" href="#">@usedProduct.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <!-- Dropdown for New Products -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="newProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            New Products
+                        </a>
+                        <ul id="newProductsDropdownList" class="dropdown-menu" aria-labelledby="newProductsDropdown">
+                            @foreach (var newProduct in ViewBag.NewProducts ?? new List<Product>())
+                            {
+                                <li><a class="dropdown-item" href="#">@newProduct.Name</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <!-- Navigation for Parent Categories -->
+                    @foreach (var parentCategory in ViewBag.ParentCategories ?? new List<ParentCategory>())
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="parentCategoryDropdown-@parentCategory.ParentCategoryID"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false" onmouseover="loadSubCategories(@parentCategory.ParentCategoryID)">
+                                @parentCategory.ParentCategoryName
+                            </a>
+                            <ul id="subCategoryDropdown-@parentCategory.ParentCategoryID" class="dropdown-menu" aria-labelledby="parentCategoryDropdown-@parentCategory.ParentCategoryID">
+                                <!-- Placeholder for subcategories loaded via AJAX -->
+                            </ul>
+                        </li>
+                    }
+                </ul>
             </div>
         </nav>
     </header>
@@ -76,5 +139,29 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // JavaScript function to handle AJAX call and display subcategories
+        function loadSubCategories(parentCategoryId) {
+            $.ajax({
+                url: '@Url.Action("GetSubCategories", "Category")',
+                type: 'GET',
+                data: { parentId: parentCategoryId },
+                success: function (data) {
+                    var dropdown = $('#subCategoryDropdown-' + parentCategoryId);
+                    dropdown.empty();
+
+                    $.each(data, function (index, subCategory) {
+                        dropdown.append('<li><a class="dropdown-item" href="#">' + subCategory.categoryName + '</a></li>');
+                    });
+
+                    dropdown.parent().addClass('show');
+                },
+                error: function () {
+                    console.log('Failed to load subcategories.');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

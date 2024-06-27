@@ -19,6 +19,16 @@ namespace MVCKontorExpert.BusinessLogic
             return await _productAccess.GetAllProducts();
         }
 
+        public async Task<List<Product>> GetUsedProducts()
+        {
+            return await _productAccess.GetUsedProducts();
+        }
+
+        public async Task<List<Product>> GetNewProducts()
+        {
+            return await _productAccess.GetNewProducts();
+        }
+
         public async Task<Product> GetProductById(int productId)
         {
             return await _productAccess.GetProductById(productId);

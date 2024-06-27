@@ -29,6 +29,11 @@ namespace MVCKontorExpert.BusinessLogic
             return await _categoryAccess.GetCategoryByName(categoryName);
         }
 
+        public async Task<List<Category>> GetCategoriesByParentCategoryId(int parentCategoryId)
+        {
+            return await _categoryAccess.GetCategoriesByParentCategoryId(parentCategoryId);
+        }
+
         public async Task<int> AddCategory(Category category)
         {
             return await _categoryAccess.AddCategory(category);

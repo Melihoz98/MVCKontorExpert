@@ -49,6 +49,70 @@ namespace MVCKontorExpert.DataAccess
             return products;
         }
 
+        public async Task<List<Product>> GetUsedProducts()
+        {
+            var usedProducts = new List<Product>();
+
+            try
+            {
+                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products WHERE IsUsed = 1";
+
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
+                {
+                    await con.OpenAsync();
+
+                    using (var productReader = await readCommand.ExecuteReaderAsync())
+                    {
+                        while (await productReader.ReadAsync())
+                        {
+                            var product = GetProductFromReader(productReader);
+                            usedProducts.Add(product);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving used products: {ex.Message}");
+                throw;
+            }
+
+            return usedProducts;
+        }
+
+        public async Task<List<Product>> GetNewProducts()
+        {
+            var newProducts = new List<Product>();
+
+            try
+            {
+                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products WHERE IsUsed = 0";
+
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
+                {
+                    await con.OpenAsync();
+
+                    using (var productReader = await readCommand.ExecuteReaderAsync())
+                    {
+                        while (await productReader.ReadAsync())
+                        {
+                            var product = GetProductFromReader(productReader);
+                            newProducts.Add(product);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving new products: {ex.Message}");
+                throw;
+            }
+
+            return newProducts;
+        }
+
         public async Task<Product> GetProductById(int productId)
         {
             Product foundProduct = null;
@@ -85,22 +149,31 @@ namespace MVCKontorExpert.DataAccess
         public async Task<Product> GetProductByName(string productName)
         {
             Product product = null;
-            const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products WHERE Name = @ProductName";
 
-            using (var con = new SqlConnection(_connectionString))
-            using (var command = new SqlCommand(queryString, con))
+            try
             {
-                command.Parameters.AddWithValue("@ProductName", productName);
+                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products WHERE Name = @ProductName";
 
-                await con.OpenAsync();
-
-                using (var reader = await command.ExecuteReaderAsync())
+                using (var con = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(queryString, con))
                 {
-                    if (await reader.ReadAsync())
+                    command.Parameters.AddWithValue("@ProductName", productName);
+
+                    await con.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        product = GetProductFromReader(reader);
+                        if (await reader.ReadAsync())
+                        {
+                            product = GetProductFromReader(reader);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving product: {ex.Message}");
+                throw;
             }
 
             return product;

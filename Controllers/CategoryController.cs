@@ -9,10 +9,12 @@ namespace MVCKontorExpert.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryData _categoryData;
+        private readonly IParentCategoryData _parentCategoryData;
 
-        public CategoryController(ICategoryData categoryData)
+        public CategoryController(ICategoryData categoryData, IParentCategoryData parentCategoryData)
         {
             _categoryData = categoryData;
+            _parentCategoryData = parentCategoryData;
         }
 
         public async Task<IActionResult> CategoryManagement()
@@ -84,5 +86,12 @@ namespace MVCKontorExpert.Controllers
             await _categoryData.DeleteCategory(id);
             return RedirectToAction(nameof(CategoryManagement));
         }
+
+        public async Task<IActionResult> GetSubCategories(int parentId)
+        {
+            var subCategories = await _categoryData.GetCategoriesByParentCategoryId(parentId);
+            return Json(subCategories);
+        }
+
     }
 }
