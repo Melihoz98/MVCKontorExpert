@@ -26,10 +26,11 @@ namespace MVCKontorExpert.Controllers
             var categories = await _categoryData.GetAllCategories();
             var parentCategories = await _parentCategoryData.GetAllParentCategories();
             var usedProducts = await _productData.GetUsedProducts();
-            var newProducts = await _productData.GetNewProducts(); 
+            var newProducts = await _productData.GetNewProducts();
             var hjemmekontor = await _categoryData.GetCategoriesByParentCategoryId(8);
             var akustik = await _categoryData.GetCategoriesByParentCategoryId(6);
             var diverse = await _categoryData.GetCategoriesByParentCategoryId(7);
+            var allProducts = await _productData.GetAllProducts(); // Hent alle produkter
 
             ViewBag.Categories = categories;
             ViewBag.ParentCategories = parentCategories;
@@ -39,8 +40,9 @@ namespace MVCKontorExpert.Controllers
             ViewBag.Akustik = akustik;
             ViewBag.Diverse = diverse;
 
-            return View();
+            return View(allProducts); // Send alle produkter til viewet
         }
+
 
 
         public IActionResult Privacy()

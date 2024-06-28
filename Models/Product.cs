@@ -3,7 +3,7 @@
     public class Product
     {
         public Product() { }
-        public Product(string name, string description, string brand, decimal price, int stockQuantity, string color, string dimensions, int categoryID, bool isUsed) 
+        public Product(string name, string description, string brand, decimal price, int stockQuantity, string color, string dimensions, int categoryID, bool isUsed, ICollection<ProductImage> images)
         {
             Name = name;
             Description = description;
@@ -13,10 +13,11 @@
             Color = color;
             Dimensions = dimensions;
             CategoryID = categoryID;
-            IsUsed = false; ;
+            IsUsed = false;
+            Images = images;
         }
 
-        public Product(int productID, string name, string description, string brand, decimal price, int stockQuantity, string color, string dimensions, int categoryID, bool isUsed)
+        public Product(int productID, string name, string description, string brand, decimal price, int stockQuantity, string color, string dimensions, int categoryID, bool isUsed, ICollection<ProductImage> images)
         {
             ProductID = productID;
             Name = name;
@@ -27,7 +28,8 @@
             Color = color;
             Dimensions = dimensions;
             CategoryID = categoryID;
-            IsUsed = false; ;
+            IsUsed = false;
+            Images = images;
         }
 
         public int ProductID { get; set; }

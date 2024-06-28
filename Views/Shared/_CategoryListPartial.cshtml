@@ -1,9 +1,6 @@
 ﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
     <div class="container-fluid">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-
-
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="usedProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Used Products
@@ -11,14 +8,10 @@
                 <ul id="usedProductsDropdownList" class="dropdown-menu" aria-labelledby="usedProductsDropdown">
                     @foreach (var usedProduct in ViewBag.UsedProducts ?? new List<Product>())
                     {
-                        <li><a class="dropdown-item" href="#">@usedProduct.Name</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Details", "ProductManagement", new { id = usedProduct.ProductID })">@usedProduct.Name</a></li>
                     }
                 </ul>
             </li>
-
-
-
-
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="newProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     New Products
@@ -26,22 +19,22 @@
                 <ul id="newProductsDropdownList" class="dropdown-menu" aria-labelledby="newProductsDropdown">
                     @foreach (var newProduct in ViewBag.NewProducts ?? new List<Product>())
                     {
-                        <li><a class="dropdown-item" href="#">@newProduct.Name</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("Details", "ProductManagement", new { id = newProduct.ProductID })">@newProduct.Name</a></li>
                     }
                 </ul>
             </li>
-
-
-
-
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="HjemmekontorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   Hjemmekontor
+                    Hjemmekontor
                 </a>
                 <ul id="HjemmekontorDropdownList" class="dropdown-menu" aria-labelledby="HjemmekontorDropdown">
                     @foreach (var hjemmeKontor in ViewBag.Hjemmekontor ?? new List<Category>())
                     {
-                        <li><a class="dropdown-item" href="#">@hjemmeKontor.CategoryName</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("ProductsByParentCategory", "ProductManagement", new { parentCategoryId = hjemmeKontor.CategoryID })">@hjemmeKontor.CategoryName</a></li>
+                        @foreach (var subCategory in hjemmeKontor.SubCategories)
+                        {
+                            <li><a class="dropdown-item" href="@Url.Action("ProductsBySubCategory", "ProductManagement", new { subCategoryId = subCategory.CategoryID })">@subCategory.CategoryName</a></li>
+                        }
                     }
                 </ul>
             </li>
@@ -53,11 +46,10 @@
                 <ul id="AkustikDropdownList" class="dropdown-menu" aria-labelledby="AkustikDropdown">
                     @foreach (var akustik in ViewBag.Akustik ?? new List<Category>())
                     {
-                        <li><a class="dropdown-item" href="#">@akustik.CategoryName</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("ProductsByParentCategory", "ProductManagement", new { parentCategoryId = akustik.CategoryID })">@akustik.CategoryName</a></li>
                     }
                 </ul>
             </li>
-
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="DiverseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Diverse
@@ -65,11 +57,10 @@
                 <ul id="DiverseDropdownList" class="dropdown-menu" aria-labelledby="DiverseDropdown">
                     @foreach (var diverse in ViewBag.Diverse ?? new List<Category>())
                     {
-                        <li><a class="dropdown-item" href="#">@diverse.CategoryName</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("ProductsByParentCategory", "ProductManagement", new { parentCategoryId = diverse.CategoryID })">@diverse.CategoryName</a></li>
                     }
                 </ul>
             </li>
-
         </ul>
     </div>
 </nav>

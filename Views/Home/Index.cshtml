@@ -1,7 +1,30 @@
-﻿
-<!-- Add necessary scripts for Bootstrap modal -->
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+﻿@model IEnumerable<MVCKontorExpert.Models.Product>
+
+@{
+    ViewData["Title"] = "All Products";
 }
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (product.Images != null && product.Images.Any())
+                    {
+                        <img src="@product.Images.First().ImageUrl" class="card-img-top" alt="@product.Name" />
+                    }
+                    else
+                    {
+                        <img src="~/path_to_default_image.jpg" class="card-img-top" alt="Default Image" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Price.ToString("C")</p>
+                        <a href="@Url.Action("Details", "ProductManagement", new { id = product.ProductID })" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

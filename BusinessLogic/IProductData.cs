@@ -14,5 +14,7 @@ namespace MVCKontorExpert.BusinessLogic
         Task<int> AddProduct(Product product);
         Task UpdateProduct(Product product);
         Task DeleteProduct(int productId);
+        Task<List<Product>> GetProductsByCategoryId(int categoryId);
+        Task<List<Product>> GetProductsByParentCategoryId(int parentCategoryId);
     }
 }

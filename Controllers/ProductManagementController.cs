@@ -97,5 +97,19 @@ namespace MVCKontorExpert.Controllers
             await _productData.DeleteProduct(id);
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> ProductsByParentCategory(int parentCategoryId)
+        {
+            var products = await _productData.GetProductsByParentCategoryId(parentCategoryId);
+            return View("~/Views/Product/Index.cshtml", products);
+        }
+
+        public async Task<IActionResult> ProductsBySubtCategory(int parentCategoryId)
+        {
+            var products = await _productData.GetProductsByCategoryId(parentCategoryId);
+            return View("~/Views/Product/Index.cshtml", products);
+        }
+
+
     }
 }

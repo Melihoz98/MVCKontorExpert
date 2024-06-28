@@ -23,7 +23,11 @@ namespace MVCKontorExpert.DataAccess
 
             try
             {
-                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products";
+                const string queryString = @"
+            SELECT P.ProductID, P.Name, P.Description, P.Brand, P.Price, P.StockQuantity, P.Color, P.Dimensions, P.CategoryID, P.IsUsed,
+                   PI.ImageID, PI.ImageUrl
+            FROM Products P
+            LEFT JOIN ProductImages PI ON P.ProductID = PI.ProductID";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var readCommand = new SqlCommand(queryString, con))
@@ -34,8 +38,48 @@ namespace MVCKontorExpert.DataAccess
                     {
                         while (await productReader.ReadAsync())
                         {
-                            var product = GetProductFromReader(productReader);
-                            products.Add(product);
+                            var productId = productReader.GetInt32(productReader.GetOrdinal("ProductID"));
+                            var existingProduct = products.FirstOrDefault(p => p.ProductID == productId);
+
+                            if (existingProduct == null)
+                            {
+                                var product = new Product
+                                {
+                                    ProductID = productId,
+                                    Name = productReader.GetString(productReader.GetOrdinal("Name")),
+                                    Description = productReader.GetString(productReader.GetOrdinal("Description")),
+                                    Brand = productReader.GetString(productReader.GetOrdinal("Brand")),
+                                    Price = productReader.GetDecimal(productReader.GetOrdinal("Price")),
+                                    StockQuantity = productReader.GetInt32(productReader.GetOrdinal("StockQuantity")),
+                                    Color = productReader.GetString(productReader.GetOrdinal("Color")),
+                                    Dimensions = productReader.GetString(productReader.GetOrdinal("Dimensions")),
+                                    CategoryID = productReader.GetInt32(productReader.GetOrdinal("CategoryID")),
+                                    IsUsed = productReader.GetBoolean(productReader.GetOrdinal("IsUsed")),
+                                    Images = new List<ProductImage>()
+                                };
+
+                                if (!productReader.IsDBNull(productReader.GetOrdinal("ImageID")))
+                                {
+                                    product.Images.Add(new ProductImage
+                                    {
+                                        ImageID = productReader.GetInt32(productReader.GetOrdinal("ImageID")),
+                                        ImageUrl = productReader.GetString(productReader.GetOrdinal("ImageUrl"))
+                                    });
+                                }
+
+                                products.Add(product);
+                            }
+                            else
+                            {
+                                if (!productReader.IsDBNull(productReader.GetOrdinal("ImageID")))
+                                {
+                                    existingProduct.Images.Add(new ProductImage
+                                    {
+                                        ImageID = productReader.GetInt32(productReader.GetOrdinal("ImageID")),
+                                        ImageUrl = productReader.GetString(productReader.GetOrdinal("ImageUrl"))
+                                    });
+                                }
+                            }
                         }
                     }
                 }
@@ -48,6 +92,7 @@ namespace MVCKontorExpert.DataAccess
 
             return products;
         }
+
 
         public async Task<List<Product>> GetUsedProducts()
         {
@@ -266,6 +311,77 @@ namespace MVCKontorExpert.DataAccess
                 Console.WriteLine($"Error deleting product: {ex.Message}");
                 throw;
             }
+        }
+
+        public async Task<List<Product>> GetProductsByCategoryId(int categoryId)
+        {
+            var products = new List<Product>();
+
+            try
+            {
+                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products WHERE CategoryID = @CategoryId";
+
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
+                {
+                    readCommand.Parameters.AddWithValue("@CategoryId", categoryId);
+
+                    await con.OpenAsync();
+
+                    using (var productReader = await readCommand.ExecuteReaderAsync())
+                    {
+                        while (await productReader.ReadAsync())
+                        {
+                            var product = GetProductFromReader(productReader);
+                            products.Add(product);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving products by category ID: {ex.Message}");
+                throw;
+            }
+
+            return products;
+        }
+
+        public async Task<List<Product>> GetProductsByParentCategoryId(int parentCategoryId)
+        {
+            var products = new List<Product>();
+
+            try
+            {
+                const string queryString = "SELECT P.ProductID, P.Name, P.Description, P.Brand, P.Price, P.StockQuantity, P.Color, P.Dimensions, P.CategoryID, P.IsUsed " +
+                                           "FROM Products P " +
+                                           "INNER JOIN Categories C ON P.CategoryID = C.CategoryID " +
+                                           "WHERE C.ParentCategoryID = @ParentCategoryId";
+
+                using (var con = new SqlConnection(_connectionString))
+                using (var readCommand = new SqlCommand(queryString, con))
+                {
+                    readCommand.Parameters.AddWithValue("@ParentCategoryId", parentCategoryId);
+
+                    await con.OpenAsync();
+
+                    using (var productReader = await readCommand.ExecuteReaderAsync())
+                    {
+                        while (await productReader.ReadAsync())
+                        {
+                            var product = GetProductFromReader(productReader);
+                            products.Add(product);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving products by parent category ID: {ex.Message}");
+                throw;
+            }
+
+            return products;
         }
 
         private Product GetProductFromReader(SqlDataReader productReader)
