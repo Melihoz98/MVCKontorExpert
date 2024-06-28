@@ -48,7 +48,42 @@ namespace MVCKontorExpert.DataAccess
 
             return products;
         }
+        public async Task<List<Product>> GetProductsByCategoryID(int categoryID)
+        {
+            var products = new List<Product>();
 
+            try
+            {
+                const string queryString = @"
+                    SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed 
+                    FROM Products 
+                    WHERE CategoryID = @CategoryID";
+
+                using (var con = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(queryString, con))
+                {
+                    command.Parameters.AddWithValue("@CategoryID", categoryID);
+
+                    await con.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var product = GetProductFromReader(reader);
+                            products.Add(product);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving products by category ID: {ex.Message}");
+                throw;
+            }
+
+            return products;
+        }
         public async Task<List<Product>> GetUsedProducts()
         {
             var usedProducts = new List<Product>();

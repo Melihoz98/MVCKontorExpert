@@ -53,5 +53,10 @@ namespace MVCKontorExpert.BusinessLogic
         {
             await _productAccess.DeleteProduct(productId);
         }
+
+        public async Task<List<Product>> GetProductsByCategoryID(int categoryID)
+        {
+            return await _productAccess.GetProductsByCategoryID(categoryID);
+        }
     }
 }

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<MVCKontorExpert.Models.Product>
+
+<h1>Products</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Brand</th>
+            <th>Price</th>
+            <th>Stock Quantity</th>
+            <th>Color</th>
+            <th>Dimensions</th>
+            <th>Is Used</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Brand</td>
+                <td>@product.Price</td>
+                <td>@product.StockQuantity</td>
+                <td>@product.Color</td>
+                <td>@product.Dimensions</td>
+                <td>@(product.IsUsed ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>

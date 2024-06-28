@@ -7,6 +7,7 @@ namespace MVCKontorExpert.DataAccess
         Task<List<Product>> GetAllProducts();
         Task<List<Product>> GetUsedProducts();
         Task<List<Product>> GetNewProducts();
+        Task<List<Product>> GetProductsByCategoryID(int categoryID);
         Task<Product> GetProductById(int productId);
         Task<Product> GetProductByName(string productName);
         Task<int> AddProduct(Product product);

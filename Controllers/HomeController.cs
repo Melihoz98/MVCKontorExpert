@@ -3,6 +3,7 @@ using MVCKontorExpert.BusinessLogic;
 using MVCKontorExpert.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace MVCKontorExpert.Controllers
 {
@@ -10,7 +11,7 @@ namespace MVCKontorExpert.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ICategoryData _categoryData;
-        private readonly IParentCategoryData _parentCategoryData; 
+        private readonly IParentCategoryData _parentCategoryData;
         private readonly IProductData _productData;
 
         public HomeController(ILogger<HomeController> logger, ICategoryData categoryData, IParentCategoryData parentCategoryData, IProductData productData)
@@ -23,25 +24,19 @@ namespace MVCKontorExpert.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var categories = await _categoryData.GetAllCategories();
+            // Retrieve all parent categories
             var parentCategories = await _parentCategoryData.GetAllParentCategories();
-            var usedProducts = await _productData.GetUsedProducts();
-            var newProducts = await _productData.GetNewProducts(); 
-            var hjemmekontor = await _categoryData.GetCategoriesByParentCategoryId(8);
-            var akustik = await _categoryData.GetCategoriesByParentCategoryId(6);
-            var diverse = await _categoryData.GetCategoriesByParentCategoryId(7);
 
-            ViewBag.Categories = categories;
-            ViewBag.ParentCategories = parentCategories;
-            ViewBag.UsedProducts = usedProducts;
-            ViewBag.NewProducts = newProducts;
-            ViewBag.Hjemmekontor = hjemmekontor;
-            ViewBag.Akustik = akustik;
-            ViewBag.Diverse = diverse;
+            // Loop through each parent category to fetch associated categories
+            foreach (var parentCategory in parentCategories)
+            {
+                // Fetch categories for the current parent category
+                parentCategory.Categories = await _categoryData.GetCategoriesByParentCategoryId(parentCategory.ParentCategoryID);
+            }
 
-            return View();
+            // Pass the model to the view
+            return View(parentCategories);
         }
-
 
         public IActionResult Privacy()
         {

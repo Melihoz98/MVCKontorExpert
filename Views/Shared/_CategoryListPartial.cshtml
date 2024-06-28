@@ -1,75 +1,75 @@
-﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light border-bottom box-shadow mb-3">
-    <div class="container-fluid">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+﻿@model IEnumerable<MVCKontorExpert.Models.ParentCategory>
 
-
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="usedProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Used Products
-                </a>
-                <ul id="usedProductsDropdownList" class="dropdown-menu" aria-labelledby="usedProductsDropdown">
-                    @foreach (var usedProduct in ViewBag.UsedProducts ?? new List<Product>())
-                    {
-                        <li><a class="dropdown-item" href="#">@usedProduct.Name</a></li>
-                    }
-                </ul>
-            </li>
-
-
-
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="newProductsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    New Products
-                </a>
-                <ul id="newProductsDropdownList" class="dropdown-menu" aria-labelledby="newProductsDropdown">
-                    @foreach (var newProduct in ViewBag.NewProducts ?? new List<Product>())
-                    {
-                        <li><a class="dropdown-item" href="#">@newProduct.Name</a></li>
-                    }
-                </ul>
-            </li>
-
-
-
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="HjemmekontorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   Hjemmekontor
-                </a>
-                <ul id="HjemmekontorDropdownList" class="dropdown-menu" aria-labelledby="HjemmekontorDropdown">
-                    @foreach (var hjemmeKontor in ViewBag.Hjemmekontor ?? new List<Category>())
-                    {
-                        <li><a class="dropdown-item" href="#">@hjemmeKontor.CategoryName</a></li>
-                    }
-                </ul>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="AkustikDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Akustik
-                </a>
-                <ul id="AkustikDropdownList" class="dropdown-menu" aria-labelledby="AkustikDropdown">
-                    @foreach (var akustik in ViewBag.Akustik ?? new List<Category>())
-                    {
-                        <li><a class="dropdown-item" href="#">@akustik.CategoryName</a></li>
-                    }
-                </ul>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="DiverseDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Diverse
-                </a>
-                <ul id="DiverseDropdownList" class="dropdown-menu" aria-labelledby="DiverseDropdown">
-                    @foreach (var diverse in ViewBag.Diverse ?? new List<Category>())
-                    {
-                        <li><a class="dropdown-item" href="#">@diverse.CategoryName</a></li>
-                    }
-                </ul>
-            </li>
-
+<ul class="navbar">
+    <li class="dropdown">
+        <a href="#">Nye og secondhand møbler</a>
+        <ul class="dropdown-content">
+            @foreach (var parentCategory in Model)
+            {
+                <li>
+                    <strong>@parentCategory.ParentCategoryName</strong>
+                    <ul>
+                        @foreach (var category in parentCategory.Categories)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index", "Product", new { categoryID = category.CategoryID })">@category.CategoryName</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
         </ul>
-    </div>
-</nav>
+    </li>
+    <li><a href="#">Designmøbler</a></li>
+    <li><a href="#">Populære produkter</a></li>
+    <li><a href="#">Tilbud og kampagnevarer</a></li>
+    <li><a href="#">Restpartier</a></li>
+    <li><a href="#">Nyheder</a></li>
+</ul>
+
+
+                                <style>
+    .navbar {
+        list-style-type: none;
+        padding: 0;
+    }
+
+        .navbar li {
+            display: inline-block; /* Changed from 'inline' to 'inline-block' for better structure */
+            margin-right: 15px;
+            position: relative;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #000;
+        }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 200px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        list-style-type: none;
+        padding: 10px;
+    }
+
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown-content li {
+        padding: 8px 12px;
+    }
+
+    .dropdown-content ul {
+        padding-left: 0; /* Adjusted to remove extra padding for nested ul */
+    }
+
+    .dropdown-content strong {
+        font-weight: bold; /* Added for clarity, to ensure strong elements are bold */
+    }
+
+                                </style>
