@@ -40,6 +40,6 @@
         public string Dimensions { get; set; }
         public int CategoryID { get; set; }
         public bool IsUsed { get; set; }
-        public virtual ICollection<ProductImage> Images { get; set; }
+        public virtual List<ProductImage> Images { get; set; }
     }
 }

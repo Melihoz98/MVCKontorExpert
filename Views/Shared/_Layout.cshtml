@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home";
 }
 
@@ -67,7 +68,10 @@
                 </div>
             </div>
         </nav>
-       <partial name="_CategoryListPartial" />
+        <div>
+            @await Html.PartialAsync("_CategoryListPartial")
+        </div>
+      
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -82,28 +86,6 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
-    <script>
-        // JavaScript function to handle AJAX call and display subcategories
-        function loadSubCategories(parentCategoryId) {
-            $.ajax({
-                url: '@Url.Action("GetSubCategories", "Category")',
-                type: 'GET',
-                data: { parentId: parentCategoryId },
-                success: function (data) {
-                    var dropdown = $('#subCategoryDropdown-' + parentCategoryId);
-                    dropdown.empty();
-
-                    $.each(data, function (index, subCategory) {
-                        dropdown.append('<li><a class="dropdown-item" href="#">' + subCategory.categoryName + '</a></li>');
-                    });
-
-                    dropdown.parent().addClass('show');
-                },
-                error: function () {
-                    console.log('Failed to load subcategories.');
-                }
-            });
-        }
-    </script>
+   
 </body>
 </html>

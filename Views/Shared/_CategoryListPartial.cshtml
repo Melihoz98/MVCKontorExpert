@@ -1,22 +1,28 @@
-﻿@model IEnumerable<MVCKontorExpert.Models.ParentCategory>
+﻿@model MVCKontorExpert.Models.ProductsViewModel
 
 <ul class="navbar">
     <li class="dropdown">
         <a href="#">Nye og secondhand møbler</a>
         <ul class="dropdown-content">
-            @foreach (var parentCategory in Model)
+            @if (Model.ParentCategories != null)
             {
-                <li>
-                    <strong>@parentCategory.ParentCategoryName</strong>
-                    <ul>
-                        @foreach (var category in parentCategory.Categories)
+                @foreach (var parentCategory in Model.ParentCategories)
+                {
+                    <li>
+                        <strong>@parentCategory.ParentCategoryName</strong>
+                        @if (parentCategory.Categories != null)
                         {
-                            <li>
-                                <a href="@Url.Action("Index", "Product", new { categoryID = category.CategoryID })">@category.CategoryName</a>
-                            </li>
+                            <ul>
+                                @foreach (var category in parentCategory.Categories)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Product", new { categoryID = category.CategoryID })">@category.CategoryName</a>
+                                    </li>
+                                }
+                            </ul>
                         }
-                    </ul>
-                </li>
+                    </li>
+                }
             }
         </ul>
     </li>
@@ -26,9 +32,7 @@
     <li><a href="#">Restpartier</a></li>
     <li><a href="#">Nyheder</a></li>
 </ul>
-
-
-                                <style>
+<style>
     .navbar {
         list-style-type: none;
         padding: 0;
@@ -71,5 +75,4 @@
     .dropdown-content strong {
         font-weight: bold; /* Added for clarity, to ensure strong elements are bold */
     }
-
-                                </style>
+</style>

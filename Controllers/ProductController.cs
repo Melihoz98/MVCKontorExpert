@@ -1,23 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVCKontorExpert.BusinessLogic;
+using MVCKontorExpert.Models;
 
-public class ProductController : Controller
+namespace MVCKontorExpert.Controllers
 {
-    private readonly IProductData _productData;
-    private readonly IParentCategoryData _parentCategoryData;
 
-    public ProductController(IProductData productData, IParentCategoryData parentCategoryData)
+
+    public class ProductController : Controller
     {
-        _productData = productData;
-        _parentCategoryData = parentCategoryData;
-    }
+        private readonly IProductData _productData;
 
-    public async Task<IActionResult> Index(int categoryID)
-    {
-        // Retrieve products based on categoryID
-        var products = await _productData.GetProductsByCategoryID(categoryID);
-        return View(products);
-    }
+        public ProductController(IProductData productData)
+        {
+            _productData = productData;
+        }
 
+        public async Task<IActionResult> Index(int categoryID)
+        {
+            var products = await _productData.GetProductsByCategoryID(categoryID);
+
+            var viewModel = new ProductsViewModel
+            {
+                Products = products
+            };
+
+            return View(viewModel);
+        }
+
+    }
 }
-

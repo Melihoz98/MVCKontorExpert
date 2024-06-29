@@ -4,7 +4,7 @@
     {
         public int ParentCategoryID { get; set; }
         public string ParentCategoryName { get; set; }
-        public virtual ICollection<Category> Categories { get; set; }
+        public virtual List<Category> Categories { get; set; }
 
         public ParentCategory()
         {

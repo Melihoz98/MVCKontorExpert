@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MVCKontorExpert.Models.Product>
+﻿@model MVCKontorExpert.Models.ProductsViewModel
 
 <h1>Products</h1>
 
@@ -16,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in Model)
+        @foreach (var product in Model.Products) // Iterate over Model.Products
         {
             <tr>
                 <td>@product.Name</td>

@@ -4,7 +4,6 @@
     {
         public Category()
         {
-            SubCategories = new HashSet<Category>();
         }
 
         public Category(string name) : this()
@@ -28,6 +27,5 @@
 
         // Navigation properties
         public virtual Category ParentCategory { get; set; }
-        public virtual ICollection<Category> SubCategories { get; set; }
     }
 }
