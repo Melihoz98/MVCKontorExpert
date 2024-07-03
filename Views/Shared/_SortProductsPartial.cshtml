@@ -1,0 +1,26 @@
+﻿@model int
+
+<div class="form-inline">
+    <label for="sortOrder">Sort by:</label>
+    <select id="sortOrder" class="form-control" onchange="sortProducts(this.value)">
+        <option value="0" selected="@((Model == 0).ToString().ToLower())">Default</option>
+        <option value="1" selected="@((Model == 1).ToString().ToLower())">Price: Low to High</option>
+        <option value="2" selected="@((Model == 2).ToString().ToLower())">Price: High to Low</option>
+    </select>
+</div>
+
+<script>
+    function sortProducts(sortOrder) {
+        $.ajax({
+            url: '/Products/SortProducts', // Erstat med din controller og action, der håndterer sorteringen
+            type: 'GET',
+            data: { sortOrder: sortOrder },
+            success: function (data) {
+                $('#productListContainer').html(data);
+            },
+            error: function (error) {
+                console.error('Error sorting products: ', error);
+            }
+        });
+    }
+</script>

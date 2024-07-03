@@ -1,9 +1,4 @@
-﻿
-@{
-    ViewData["Title"] = "Home";
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,7 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                       <partial name="_AdministrationPartial" />
+                        <partial name="_AdministrationPartial" />
                     </ul>
                     <form class="d-flex mx-auto" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -71,7 +66,6 @@
         <div>
             @await Html.PartialAsync("_CategoryListPartial")
         </div>
-      
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -85,7 +79,5 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
-
-   
 </body>
 </html>

@@ -19,11 +19,15 @@ namespace MVCKontorExpert.DataAccess
 
         public async Task<List<Product>> GetAllProducts()
         {
-            var products = new List<Product>();
+            var products = new Dictionary<int, Product>();
 
             try
             {
-                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products";
+                const string queryString = @"
+            SELECT P.ProductID, P.Name, P.Description, P.Brand, P.Price, P.StockQuantity, P.Color, P.Dimensions, P.CategoryID, P.IsUsed,
+                   PI.ImageID, PI.ImageUrl
+            FROM Products P
+            LEFT JOIN ProductImages PI ON P.ProductID = PI.ProductID";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var readCommand = new SqlCommand(queryString, con))
@@ -34,8 +38,36 @@ namespace MVCKontorExpert.DataAccess
                     {
                         while (await productReader.ReadAsync())
                         {
-                            var product = GetProductFromReader(productReader);
-                            products.Add(product);
+                            int productId = productReader.GetInt32(productReader.GetOrdinal("ProductID"));
+
+                            if (!products.ContainsKey(productId))
+                            {
+                                var product = new Product
+                                {
+                                    ProductID = productId,
+                                    Name = productReader.GetString(productReader.GetOrdinal("Name")),
+                                    Description = productReader.GetString(productReader.GetOrdinal("Description")),
+                                    Brand = productReader.GetString(productReader.GetOrdinal("Brand")),
+                                    Price = productReader.GetDecimal(productReader.GetOrdinal("Price")),
+                                    StockQuantity = productReader.GetInt32(productReader.GetOrdinal("StockQuantity")),
+                                    Color = productReader.GetString(productReader.GetOrdinal("Color")),
+                                    Dimensions = productReader.GetString(productReader.GetOrdinal("Dimensions")),
+                                    CategoryID = productReader.GetInt32(productReader.GetOrdinal("CategoryID")),
+                                    IsUsed = productReader.GetBoolean(productReader.GetOrdinal("IsUsed")),
+                                    Images = new List<ProductImage>()
+                                };
+                                products[productId] = product;
+                            }
+
+                            if (!productReader.IsDBNull(productReader.GetOrdinal("ImageID")))
+                            {
+                                var image = new ProductImage
+                                {
+                                    ImageID = productReader.GetInt32(productReader.GetOrdinal("ImageID")),
+                                    ImageUrl = productReader.GetString(productReader.GetOrdinal("ImageUrl"))
+                                };
+                                products[productId].Images.Add(image);
+                            }
                         }
                     }
                 }
@@ -46,18 +78,21 @@ namespace MVCKontorExpert.DataAccess
                 throw;
             }
 
-            return products;
+            return new List<Product>(products.Values);
         }
+
         public async Task<List<Product>> GetProductsByCategoryID(int categoryID)
         {
-            var products = new List<Product>();
+            var products = new Dictionary<int, Product>();
 
             try
             {
                 const string queryString = @"
-                    SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed 
-                    FROM Products 
-                    WHERE CategoryID = @CategoryID";
+            SELECT P.ProductID, P.Name, P.Description, P.Brand, P.Price, P.StockQuantity, P.Color, P.Dimensions, P.CategoryID, P.IsUsed,
+                   PI.ImageID, PI.ImageUrl
+            FROM Products P
+            LEFT JOIN ProductImages PI ON P.ProductID = PI.ProductID
+            WHERE P.CategoryID = @CategoryID";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var command = new SqlCommand(queryString, con))
@@ -70,8 +105,36 @@ namespace MVCKontorExpert.DataAccess
                     {
                         while (await reader.ReadAsync())
                         {
-                            var product = GetProductFromReader(reader);
-                            products.Add(product);
+                            int productId = reader.GetInt32(reader.GetOrdinal("ProductID"));
+
+                            if (!products.ContainsKey(productId))
+                            {
+                                var product = new Product
+                                {
+                                    ProductID = productId,
+                                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                                    Description = reader.GetString(reader.GetOrdinal("Description")),
+                                    Brand = reader.GetString(reader.GetOrdinal("Brand")),
+                                    Price = reader.GetDecimal(reader.GetOrdinal("Price")),
+                                    StockQuantity = reader.GetInt32(reader.GetOrdinal("StockQuantity")),
+                                    Color = reader.GetString(reader.GetOrdinal("Color")),
+                                    Dimensions = reader.GetString(reader.GetOrdinal("Dimensions")),
+                                    CategoryID = reader.GetInt32(reader.GetOrdinal("CategoryID")),
+                                    IsUsed = reader.GetBoolean(reader.GetOrdinal("IsUsed")),
+                                    Images = new List<ProductImage>()
+                                };
+                                products[productId] = product;
+                            }
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("ImageID")))
+                            {
+                                var image = new ProductImage
+                                {
+                                    ImageID = reader.GetInt32(reader.GetOrdinal("ImageID")),
+                                    ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl"))
+                                };
+                                products[productId].Images.Add(image);
+                            }
                         }
                     }
                 }
@@ -82,8 +145,9 @@ namespace MVCKontorExpert.DataAccess
                 throw;
             }
 
-            return products;
+            return new List<Product>(products.Values);
         }
+
         public async Task<List<Product>> GetUsedProducts()
         {
             var usedProducts = new List<Product>();
@@ -154,7 +218,12 @@ namespace MVCKontorExpert.DataAccess
 
             try
             {
-                const string queryString = "SELECT ProductID, Name, Description, Brand, Price, StockQuantity, Color, Dimensions, CategoryID, IsUsed FROM Products WHERE ProductID = @ProductId";
+                const string queryString = @"
+        SELECT P.ProductID, P.Name, P.Description, P.Brand, P.Price, P.StockQuantity, P.Color, P.Dimensions, P.CategoryID, P.IsUsed,
+               PI.ImageID, PI.ImageUrl
+        FROM Products P
+        LEFT JOIN ProductImages PI ON P.ProductID = PI.ProductID
+        WHERE P.ProductID = @ProductId";
 
                 using (var con = new SqlConnection(_connectionString))
                 using (var readCommand = new SqlCommand(queryString, con))
@@ -165,9 +234,34 @@ namespace MVCKontorExpert.DataAccess
 
                     using (var productReader = await readCommand.ExecuteReaderAsync())
                     {
-                        if (await productReader.ReadAsync())
+                        while (await productReader.ReadAsync())
                         {
-                            foundProduct = GetProductFromReader(productReader);
+                            if (foundProduct == null)
+                            {
+                                foundProduct = new Product
+                                {
+                                    ProductID = productReader.GetInt32(productReader.GetOrdinal("ProductID")),
+                                    Name = productReader.GetString(productReader.GetOrdinal("Name")),
+                                    Description = productReader.GetString(productReader.GetOrdinal("Description")),
+                                    Brand = productReader.GetString(productReader.GetOrdinal("Brand")),
+                                    Price = productReader.GetDecimal(productReader.GetOrdinal("Price")),
+                                    StockQuantity = productReader.GetInt32(productReader.GetOrdinal("StockQuantity")),
+                                    Color = productReader.GetString(productReader.GetOrdinal("Color")),
+                                    Dimensions = productReader.GetString(productReader.GetOrdinal("Dimensions")),
+                                    CategoryID = productReader.GetInt32(productReader.GetOrdinal("CategoryID")),
+                                    IsUsed = productReader.GetBoolean(productReader.GetOrdinal("IsUsed")),
+                                    Images = new List<ProductImage>()
+                                };
+                            }
+
+                            if (!productReader.IsDBNull(productReader.GetOrdinal("ImageID")))
+                            {
+                                foundProduct.Images.Add(new ProductImage
+                                {
+                                    ImageID = productReader.GetInt32(productReader.GetOrdinal("ImageID")),
+                                    ImageUrl = productReader.GetString(productReader.GetOrdinal("ImageUrl"))
+                                });
+                            }
                         }
                     }
                 }
@@ -180,6 +274,7 @@ namespace MVCKontorExpert.DataAccess
 
             return foundProduct;
         }
+
 
         public async Task<Product> GetProductByName(string productName)
         {
